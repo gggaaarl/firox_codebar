@@ -58,7 +58,7 @@ function verifyEnvUser(
   password: string
 ): AppUser | null {
   const envUsername = process.env.AUTH_USERNAME ?? "admin";
-  const envPassword = process.env.AUTH_PASSWORD ?? "codigos2026";
+  const envPassword = process.env.AUTH_PASSWORD ?? "Firox2026";
 
   if (username === envUsername && password === envPassword) {
     return {
