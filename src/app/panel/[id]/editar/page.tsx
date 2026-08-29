@@ -20,7 +20,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
           Editar prenda
         </p>
-        <h1 className="font-heading text-4xl font-semibold text-stone-900">
+        <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
           {product.description}
         </h1>
         <p className="mt-2 text-stone-600">

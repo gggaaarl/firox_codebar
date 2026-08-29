@@ -7,7 +7,7 @@ export default function NewProductPage() {
         <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
           Nueva prenda
         </p>
-        <h1 className="font-heading text-4xl font-semibold text-stone-900">
+        <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
           Generar código de barras
         </h1>
         <p className="mt-2 max-w-2xl text-stone-600">

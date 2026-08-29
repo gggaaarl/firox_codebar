@@ -118,8 +118,11 @@ export function ProductForm({ product, mode }: ProductFormProps) {
               Formato: año-descripción-sexo-talla
             </p>
             {previewBarcode ? (
-              <div className="rounded-xl bg-white p-4">
-                <BarcodeDisplay value={previewBarcode} />
+              <div className="overflow-x-auto rounded-xl bg-white p-4">
+                <BarcodeDisplay
+                  value={previewBarcode}
+                  className="mx-auto block h-auto max-w-full"
+                />
               </div>
             ) : (
               <p className="rounded-xl border border-dashed border-stone-600 p-6 text-center text-sm text-stone-400">
@@ -201,11 +204,11 @@ export function ProductForm({ product, mode }: ProductFormProps) {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex flex-col gap-3 pt-4 sm:flex-row">
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
+              className="w-full sm:flex-1"
               onClick={() => router.back()}
             >
               Cancelar
@@ -213,7 +216,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
             <Button
               type="submit"
               disabled={loading || !description.trim()}
-              className="flex-1 bg-rose-500 hover:bg-rose-600"
+              className="w-full bg-rose-500 hover:bg-rose-600 sm:flex-1"
             >
               {loading && <Loader2 className="size-4 animate-spin" />}
               {mode === "create" ? "Generar código" : "Guardar cambios"}

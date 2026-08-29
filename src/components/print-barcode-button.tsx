@@ -1,43 +1,59 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { BarcodeDisplay } from "@/components/barcode-display";
 import { Button } from "@/components/ui/button";
+import { downloadBarcodeAsPng } from "@/lib/barcode-download";
 import type { Product } from "@/lib/types";
-import { Download, Printer } from "lucide-react";
+import { Download, Loader2, Printer } from "lucide-react";
 
 type PrintBarcodeButtonProps = {
   product: Product;
 };
 
 export function PrintBarcodeButton({ product }: PrintBarcodeButtonProps) {
+  const [downloading, setDownloading] = useState(false);
+
   function handlePrint() {
     window.print();
   }
 
-  function handleDownload() {
+  async function handleDownload() {
     const svg = document.querySelector("#barcode-print svg");
-    if (!svg) return;
+    if (!(svg instanceof SVGSVGElement)) return;
 
-    const serializer = new XMLSerializer();
-    const source = serializer.serializeToString(svg);
-    const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${product.barcode}.svg`;
-    link.click();
-    URL.revokeObjectURL(url);
+    setDownloading(true);
+    try {
+      await downloadBarcodeAsPng(svg, product.barcode);
+    } catch {
+      toast.error("No se pudo descargar la imagen");
+    } finally {
+      setDownloading(false);
+    }
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button onClick={handlePrint} className="bg-stone-900 hover:bg-stone-800">
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <Button
+        onClick={handlePrint}
+        className="w-full bg-stone-900 hover:bg-stone-800 sm:w-auto"
+      >
         <Printer className="size-4" />
         Imprimir etiqueta
       </Button>
-      <Button variant="outline" onClick={handleDownload}>
-        <Download className="size-4" />
-        Descargar SVG
+      <Button
+        variant="outline"
+        onClick={handleDownload}
+        disabled={downloading}
+        className="w-full sm:w-auto"
+      >
+        {downloading ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
+          <Download className="size-4" />
+        )}
+        Descargar imagen
       </Button>
     </div>
   );
@@ -47,7 +63,7 @@ export function BarcodePrintArea({ product }: PrintBarcodeButtonProps) {
   return (
     <div
       id="barcode-print"
-      className="rounded-2xl border border-stone-200 bg-white p-6 print:border-0 print:p-0"
+      className="overflow-x-auto rounded-2xl border border-stone-200 bg-white p-4 sm:p-6 print:border-0 print:p-0"
     >
       <div className="mb-4 hidden print:block">
         <p className="text-lg font-semibold">{product.description}</p>
@@ -55,7 +71,11 @@ export function BarcodePrintArea({ product }: PrintBarcodeButtonProps) {
           {product.gender} · Talla {product.size} · {product.year}
         </p>
       </div>
-      <BarcodeDisplay value={product.barcode} height={80} className="mx-auto" />
+      <BarcodeDisplay
+        value={product.barcode}
+        height={80}
+        className="mx-auto block h-auto max-w-full"
+      />
     </div>
   );
 }

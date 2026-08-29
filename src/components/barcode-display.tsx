@@ -40,6 +40,7 @@ export function BarcodeDisplay({
       className={className}
       role="img"
       aria-label={`Código de barras ${value}`}
+      preserveAspectRatio="xMidYMid meet"
     />
   );
 }

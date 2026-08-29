@@ -55,12 +55,15 @@ export default async function ProductDetailPage({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/panel/${product.id}/editar`} className={buttonVariants({ variant: "outline" })}>
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <Link
+            href={`/panel/${product.id}/editar`}
+            className={cn(buttonVariants({ variant: "outline" }), "w-full sm:w-auto")}
+          >
             <Pencil className="size-4" />
             Editar
           </Link>
-          <DeleteProductButton product={product} />
+          <DeleteProductButton product={product} className="w-full sm:w-auto" />
         </div>
       </div>
 
@@ -90,7 +93,7 @@ export default async function ProductDetailPage({
                 <p className="text-sm font-medium text-stone-500">
                   Código de barras
                 </p>
-                <p className="font-mono text-lg font-semibold text-stone-900">
+                <p className="break-all font-mono text-base font-semibold text-stone-900 sm:text-lg">
                   {product.barcode}
                 </p>
               </div>

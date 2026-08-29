@@ -43,6 +43,19 @@ create table if not exists public.app_users (
 create index if not exists app_users_username_idx on public.app_users (username);
 
 -- ------------------------------------------------------------
--- 3. FOTOS (Storage, no es SQL — hacer en el dashboard)
+-- 4. PERMISOS (PostgREST / service_role)
+-- ------------------------------------------------------------
+
+grant usage on schema public to postgres, anon, authenticated, service_role;
+
+grant all on table public.products to postgres, service_role;
+grant select, insert, update, delete on table public.products to authenticated;
+grant select on table public.products to anon;
+
+grant all on table public.app_users to postgres, service_role;
+grant select on table public.app_users to authenticated;
+
+-- ------------------------------------------------------------
+-- 5. FOTOS (Storage, no es SQL — hacer en el dashboard)
 --    Storage → New bucket → nombre: product-images → Public ✓
 -- ============================================================

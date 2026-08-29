@@ -4,14 +4,19 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 type DeleteProductButtonProps = {
   product: Product;
+  className?: string;
 };
 
-export function DeleteProductButton({ product }: DeleteProductButtonProps) {
+export function DeleteProductButton({
+  product,
+  className,
+}: DeleteProductButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +59,10 @@ export function DeleteProductButton({ product }: DeleteProductButtonProps) {
       size="sm"
       onClick={handleDelete}
       disabled={loading}
-      className="text-red-600 hover:bg-red-50 hover:text-red-700"
+      className={cn(
+        "text-red-600 hover:bg-red-50 hover:text-red-700",
+        className
+      )}
     >
       {loading ? (
         <Loader2 className="size-4 animate-spin" />
