@@ -10,11 +10,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Contraseña", type: "password" },
       },
       authorize: async (credentials) => {
-        const username = credentials?.username;
-        const password = credentials?.password;
-        if (!username || !password) return null;
+        if (
+          typeof credentials?.username !== "string" ||
+          typeof credentials?.password !== "string"
+        ) {
+          return null;
+        }
 
-        const user = await verifyAppUser(username, password);
+        const user = await verifyAppUser(
+          credentials.username,
+          credentials.password
+        );
         if (!user) return null;
 
         return {
