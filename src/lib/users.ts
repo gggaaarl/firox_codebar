@@ -25,7 +25,7 @@ export async function verifyAppUser(
   password: string
 ): Promise<AppUser | null> {
   if (!isSupabaseConfigured()) {
-    return verifyEnvUser(username, password);
+    return verifyLocalDevUser(username, password);
   }
 
   const supabase = getSupabaseAdmin();
@@ -35,15 +35,13 @@ export async function verifyAppUser(
     .eq("username", username.trim())
     .maybeSingle();
 
-  if (error || !data) {
-    return verifyEnvUser(username, password);
-  }
+  if (error || !data) return null;
 
   const row = data as DbUserRow;
   if (!row.is_active) return null;
 
   const valid = await bcrypt.compare(password, row.password_hash).catch(() => false);
-  if (!valid) return verifyEnvUser(username, password);
+  if (!valid) return null;
 
   return {
     id: row.id,
@@ -53,7 +51,8 @@ export async function verifyAppUser(
   };
 }
 
-function verifyEnvUser(
+/** Solo cuando Supabase no está configurado (desarrollo local). */
+function verifyLocalDevUser(
   username: string,
   password: string
 ): AppUser | null {
@@ -62,7 +61,7 @@ function verifyEnvUser(
 
   if (username === envUsername && password === envPassword) {
     return {
-      id: "env-admin",
+      id: "local-admin",
       username: envUsername,
       displayName: "Administrador",
       role: "admin",

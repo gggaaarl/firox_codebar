@@ -1,6 +1,6 @@
 /**
  * Crea el usuario admin en Supabase (app_users).
- * Usa AUTH_USERNAME y AUTH_PASSWORD de .env.local o variables de entorno.
+ * Usa SEED_ADMIN_* de .env.local (solo desarrollo local).
  *
  * Uso: node scripts/seed-admin.mjs
  */
@@ -29,9 +29,9 @@ function loadEnvLocal() {
 const env = { ...process.env, ...loadEnvLocal() };
 const url = env.NEXT_PUBLIC_SUPABASE_URL;
 const key = env.SUPABASE_SERVICE_ROLE_KEY;
-const username = env.AUTH_USERNAME ?? "admin";
-const password = env.AUTH_PASSWORD ?? "codigos2026";
-const displayName = env.AUTH_DISPLAY_NAME ?? "Administrador";
+const username = env.SEED_ADMIN_USERNAME ?? "admin";
+const password = env.SEED_ADMIN_PASSWORD ?? "Firox2026";
+const displayName = env.SEED_ADMIN_DISPLAY_NAME ?? "Administrador";
 
 if (!url || !key || key.includes("tu-service-role")) {
   console.error("Falta NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY.");
