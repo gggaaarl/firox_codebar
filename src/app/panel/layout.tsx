@@ -1,5 +1,8 @@
 import { DashboardNav } from "@/components/dashboard-nav";
 
+// No pre-renderizar en build: las páginas leen Supabase en runtime.
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({
   children,
 }: {
