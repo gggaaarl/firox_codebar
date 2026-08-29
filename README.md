@@ -1,15 +1,14 @@
-# Firox — Códigos de barras para prendas
+# Firox — Códigos de barras
 
-Web app interna para generar códigos de barras de ropa con fotos personalizables. Diseñada como demo comercial para mostrar el potencial de una futura tienda online.
+Web app interna para generar códigos de barras de ropa con fotos por prenda.
 
 ## Características
 
-- Login con usuario y contraseña únicos (sin OAuth)
+- Login con usuario y contraseña (sin OAuth)
 - Generación automática de códigos CODE128 con formato **año-descripción-sexo-talla**
-- Subida de fotos por prenda (reutilizables en vitrina comercial)
-- Panel de administración con vista previa de catálogo
+- Subida de fotos por prenda
+- Panel de administración con listado de prendas
 - Impresión y descarga de etiquetas en SVG
-- Almacenamiento local en JSON (sin base de datos)
 
 ## Despliegue (Supabase + Vercel)
 

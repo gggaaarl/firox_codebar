@@ -11,10 +11,9 @@ import { Barcode, Eye, Pencil } from "lucide-react";
 
 type ProductCardProps = {
   product: Product;
-  variant?: "dashboard" | "catalog";
 };
 
-export function ProductCard({ product, variant = "dashboard" }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="group overflow-hidden border-0 bg-white shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
@@ -58,30 +57,28 @@ export function ProductCard({ product, variant = "dashboard" }: ProductCardProps
           </Badge>
         </div>
 
-        {variant === "dashboard" && (
-          <div className="flex gap-2 pt-1">
-            <Link
-              href={`/panel/${product.id}`}
-              className={cn(
-                buttonVariants({ variant: "outline", size: "sm" }),
-                "flex-1"
-              )}
-            >
-              <Eye className="size-4" />
-              Ver código
-            </Link>
-            <Link
-              href={`/panel/${product.id}/editar`}
-              className={cn(
-                buttonVariants({ size: "sm" }),
-                "flex-1 bg-stone-900 hover:bg-stone-800"
-              )}
-            >
-              <Pencil className="size-4" />
-              Editar
-            </Link>
-          </div>
-        )}
+        <div className="flex gap-2 pt-1">
+          <Link
+            href={`/panel/${product.id}`}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "flex-1"
+            )}
+          >
+            <Eye className="size-4" />
+            Ver código
+          </Link>
+          <Link
+            href={`/panel/${product.id}/editar`}
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "flex-1 bg-stone-900 hover:bg-stone-800"
+            )}
+          >
+            <Pencil className="size-4" />
+            Editar
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );
