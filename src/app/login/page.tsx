@@ -54,10 +54,10 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="flex w-full flex-col justify-center px-6 py-12 lg:w-1/2 lg:px-16">
-        <div className="mx-auto w-full max-w-md space-y-8">
-          <h2 className="font-heading text-3xl font-semibold text-stone-900">
-            Bienvenido
+      <div className="flex w-full flex-col items-center justify-center px-6 py-12 lg:w-1/2 lg:px-16">
+        <div className="mx-auto w-full max-w-md space-y-8 text-center">
+          <h2 className="font-heading text-4xl font-semibold text-stone-900 sm:text-5xl">
+            Firox
           </h2>
 
           <LoginForm />
