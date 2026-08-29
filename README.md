@@ -11,6 +11,10 @@ Web app interna para generar códigos de barras de ropa con fotos personalizable
 - Impresión y descarga de etiquetas en SVG
 - Almacenamiento local en JSON (sin base de datos)
 
+## Despliegue (Supabase + Vercel)
+
+Guía paso a paso en **[DEPLOY.md](./DEPLOY.md)** — incluye GitHub, Supabase y Vercel explicado simple.
+
 ## Requisitos
 
 - Node.js 18+
