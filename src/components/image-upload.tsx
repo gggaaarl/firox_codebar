@@ -110,9 +110,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
           )}
           <div className="text-center">
             <p className="font-medium">Sube la foto de la prenda</p>
-            <p className="text-sm text-stone-400">
-              Esta imagen podrá usarse en tu web comercial
-            </p>
+            <p className="text-sm text-stone-400">JPG, PNG o WEBP · máx. 5 MB</p>
           </div>
         </button>
       )}

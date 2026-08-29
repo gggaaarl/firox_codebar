@@ -20,9 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Firox — Códigos de barras para prendas",
-  description:
-    "Genera códigos de barras para tu inventario de ropa con fotos personalizables listas para tu web comercial.",
+  title: "Firox — Códigos de barras",
+  description: "Gestión de códigos de barras para prendas.",
 };
 
 export default function RootLayout({

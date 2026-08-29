@@ -81,11 +81,6 @@ export default async function ProductDetailPage({
               </div>
             )}
           </div>
-          <CardContent className="p-4">
-            <p className="text-sm text-stone-500">
-              Esta foto puede reutilizarse en la vitrina de tu web comercial.
-            </p>
-          </CardContent>
         </Card>
 
         <div className="space-y-6">
