@@ -3,6 +3,14 @@ import { auth } from "@/auth";
 import { promises as fs } from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import {
+  getPublicStorageUrl,
+  getSupabaseAdmin,
+  isSupabaseConfigured,
+  PRODUCT_IMAGES_BUCKET,
+} from "@/lib/supabase/admin";
+
+const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif"];
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -33,19 +41,34 @@ export async function POST(request: Request) {
     }
 
     const extension = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-    const allowed = ["jpg", "jpeg", "png", "webp", "gif"];
-    if (!allowed.includes(extension)) {
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
       return NextResponse.json(
         { error: "Formato de imagen no soportado" },
         { status: 400 }
       );
     }
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
     const filename = `${uuidv4()}.${extension}`;
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    if (isSupabaseConfigured()) {
+      const supabase = getSupabaseAdmin();
+      const { error } = await supabase.storage
+        .from(PRODUCT_IMAGES_BUCKET)
+        .upload(filename, buffer, {
+          contentType: file.type,
+          upsert: false,
+        });
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+
+      return NextResponse.json({ url: getPublicStorageUrl(filename) });
+    }
+
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await fs.mkdir(uploadsDir, { recursive: true });
     await fs.writeFile(path.join(uploadsDir, filename), buffer);
 
     return NextResponse.json({ url: `/uploads/${filename}` });
