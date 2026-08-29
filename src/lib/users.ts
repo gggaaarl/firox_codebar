@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import {
   getSupabaseAdmin,
   isSupabaseConfigured,
@@ -11,13 +10,11 @@ export type AppUser = {
   role: "admin" | "editor";
 };
 
-type DbUserRow = {
+type VerifiedUserRow = {
   id: string;
   username: string;
-  password_hash: string;
   display_name: string;
   role: "admin" | "editor";
-  is_active: boolean;
 };
 
 export async function verifyAppUser(
@@ -29,19 +26,16 @@ export async function verifyAppUser(
   }
 
   const supabase = getSupabaseAdmin();
-  const { data, error } = await supabase
-    .from("app_users")
-    .select("id, username, password_hash, display_name, role, is_active")
-    .eq("username", username.trim())
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("verify_app_user_password", {
+    p_username: username.trim(),
+    p_password: password,
+  });
 
-  if (error || !data) return null;
+  if (error || !data || !Array.isArray(data) || data.length === 0) {
+    return null;
+  }
 
-  const row = data as DbUserRow;
-  if (!row.is_active) return null;
-
-  const valid = await bcrypt.compare(password, row.password_hash).catch(() => false);
-  if (!valid) return null;
+  const row = data[0] as VerifiedUserRow;
 
   return {
     id: row.id,
@@ -69,8 +63,4 @@ function verifyLocalDevUser(
   }
 
   return null;
-}
-
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 12);
 }
