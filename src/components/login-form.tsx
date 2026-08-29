@@ -45,7 +45,6 @@ export function LoginForm() {
           id="username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-          placeholder="admin"
           autoComplete="username"
           required
         />
