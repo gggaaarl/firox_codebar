@@ -42,8 +42,8 @@ export async function verifyAppUser(
   const row = data as DbUserRow;
   if (!row.is_active) return null;
 
-  const valid = await bcrypt.compare(password, row.password_hash);
-  if (!valid) return null;
+  const valid = await bcrypt.compare(password, row.password_hash).catch(() => false);
+  if (!valid) return verifyEnvUser(username, password);
 
   return {
     id: row.id,

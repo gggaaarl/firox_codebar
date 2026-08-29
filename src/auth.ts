@@ -10,24 +10,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Contraseña", type: "password" },
       },
       authorize: async (credentials) => {
-        if (
-          typeof credentials?.username !== "string" ||
-          typeof credentials?.password !== "string"
-        ) {
+        try {
+          if (
+            typeof credentials?.username !== "string" ||
+            typeof credentials?.password !== "string"
+          ) {
+            return null;
+          }
+
+          const user = await verifyAppUser(
+            credentials.username,
+            credentials.password
+          );
+          if (!user) return null;
+
+          return {
+            id: user.id,
+            name: user.displayName,
+            role: user.role,
+          };
+        } catch {
           return null;
         }
-
-        const user = await verifyAppUser(
-          credentials.username,
-          credentials.password
-        );
-        if (!user) return null;
-
-        return {
-          id: user.id,
-          name: user.displayName,
-          role: user.role,
-        };
       },
     }),
   ],
@@ -37,5 +41,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
   },
+  secret: process.env.AUTH_SECRET,
   trustHost: true,
 });
