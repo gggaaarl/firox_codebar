@@ -74,7 +74,10 @@ export async function getProducts(): Promise<Product[]> {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("getProducts:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(mapRow);
   }
 
@@ -93,7 +96,10 @@ export async function getProduct(id: string): Promise<Product | null> {
       .eq("id", id)
       .maybeSingle();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("getProduct:", error.message);
+      return null;
+    }
     return data ? mapRow(data as DbRow) : null;
   }
 
