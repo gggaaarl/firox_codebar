@@ -56,22 +56,9 @@ export default function LoginPage() {
 
       <div className="flex w-full flex-col justify-center px-6 py-12 lg:w-1/2 lg:px-16">
         <div className="mx-auto w-full max-w-md space-y-8">
-          <div className="space-y-2 lg:hidden">
-            <div className="flex items-center gap-2">
-              <Barcode className="size-6 text-stone-900" />
-              <span className="font-heading text-2xl font-semibold">ModaLabel</span>
-            </div>
-            <p className="text-stone-600">Ingresa para gestionar tus códigos</p>
-          </div>
-
-          <div className="space-y-2">
-            <h2 className="font-heading text-3xl font-semibold text-stone-900">
-              Bienvenido
-            </h2>
-            <p className="text-stone-600">
-              Acceso exclusivo para el equipo de la tienda
-            </p>
-          </div>
+          <h2 className="font-heading text-3xl font-semibold text-stone-900">
+            Bienvenido
+          </h2>
 
           <LoginForm />
         </div>

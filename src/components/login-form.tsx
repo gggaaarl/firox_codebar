@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Barcode, Loader2, Lock, Sparkles } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 
 export function LoginForm() {
   const router = useRouter();
@@ -83,14 +83,6 @@ export function LoginForm() {
           </>
         )}
       </Button>
-
-      <div className="rounded-2xl border border-dashed border-stone-200 bg-stone-50 p-4 text-center text-sm text-stone-500">
-        <div className="mb-2 flex items-center justify-center gap-2 text-stone-700">
-          <Barcode className="size-4" />
-          <Sparkles className="size-4 text-rose-500" />
-        </div>
-        Acceso restringido para el equipo interno
-      </div>
     </form>
   );
 }

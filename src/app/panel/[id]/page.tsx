@@ -45,7 +45,7 @@ export default async function ProductDetailPage({
             <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
               {product.year}
             </p>
-            <h1 className="font-heading text-4xl font-semibold text-stone-900">
+            <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
               {product.description}
             </h1>
             <div className="mt-3 flex flex-wrap gap-2">

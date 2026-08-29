@@ -15,7 +15,7 @@ export default async function PanelPage() {
           <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
             Panel de control
           </p>
-          <h1 className="font-heading text-4xl font-semibold text-stone-900">
+          <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
             Tus prendas
           </h1>
           <p className="mt-2 max-w-2xl text-stone-600">
@@ -25,7 +25,10 @@ export default async function PanelPage() {
         </div>
         <Link
           href="/panel/nuevo"
-          className={cn(buttonVariants(), "bg-rose-500 hover:bg-rose-600")}
+          className={cn(
+            buttonVariants(),
+            "w-full bg-rose-500 hover:bg-rose-600 sm:w-auto"
+          )}
         >
           <Plus className="size-4" />
           Nueva prenda
