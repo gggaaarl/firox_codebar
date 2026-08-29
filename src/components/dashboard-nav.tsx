@@ -34,7 +34,7 @@ export function DashboardNav() {
               </div>
               <div className="min-w-0">
                 <p className="truncate font-heading text-lg font-semibold leading-none text-stone-900">
-                  ModaLabel
+                  Firox
                 </p>
                 <p className="truncate text-xs text-stone-500">Códigos de prenda</p>
               </div>

@@ -13,7 +13,7 @@ export default function LoginPage() {
             </div>
             <div>
               <p className="font-heading text-2xl font-semibold text-stone-900">
-                ModaLabel
+                Firox
               </p>
               <p className="text-sm text-stone-600">Gestión de códigos de prenda</p>
             </div>

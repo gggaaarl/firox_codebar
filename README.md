@@ -1,4 +1,4 @@
-# ModaLabel — Códigos de barras para prendas
+# Firox — Códigos de barras para prendas
 
 Web app interna para generar códigos de barras de ropa con fotos personalizables. Diseñada como demo comercial para mostrar el potencial de una futura tienda online.
 
