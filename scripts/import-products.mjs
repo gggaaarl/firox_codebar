@@ -71,7 +71,7 @@ for (const row of rows) {
   seen.add(codigoBarra);
 
   products.push({
-    cod_sistema: cell(row, "CODSISTEMA"),
+    cod_sistema: Number(cell(row, "CODSISTEMA")) || 0,
     cod_local: cell(row, "COD_LOCAL"),
     codigo_barra: codigoBarra,
     clase: cell(row, "CLASE"),

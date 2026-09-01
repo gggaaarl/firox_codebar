@@ -4,7 +4,7 @@ drop table if exists public.products cascade;
 
 create table public.products (
   id uuid primary key default gen_random_uuid(),
-  cod_sistema text not null,
+  cod_sistema integer not null,
   cod_local text not null,
   codigo_barra text not null unique,
   clase text not null,

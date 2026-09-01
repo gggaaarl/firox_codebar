@@ -12,7 +12,7 @@ const DATA_FILE = path.join(DATA_DIR, "products.json");
 
 type DbRow = {
   id: string;
-  cod_sistema: string;
+  cod_sistema: number | string;
   cod_local: string;
   codigo_barra: string;
   clase: string;
@@ -29,7 +29,7 @@ type DbRow = {
 function mapRow(row: DbRow): Product {
   return {
     id: row.id,
-    codSistema: row.cod_sistema,
+    codSistema: String(row.cod_sistema),
     codLocal: row.cod_local,
     codigoBarra: row.codigo_barra,
     clase: row.clase,
@@ -46,7 +46,7 @@ function mapRow(row: DbRow): Product {
 
 function toDbRow(input: ProductInput) {
   return {
-    cod_sistema: input.codSistema,
+    cod_sistema: Number(input.codSistema) || 0,
     cod_local: input.codLocal,
     codigo_barra: input.codigoBarra,
     clase: input.clase,
@@ -85,18 +85,20 @@ export async function getProducts(): Promise<Product[]> {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("cod_sistema", { ascending: true });
 
     if (error) {
       console.error("getProducts:", error.message);
       return [];
     }
-    return (data as DbRow[]).map(mapRow);
+    return (data as DbRow[])
+      .map(mapRow)
+      .sort((a, b) => Number(a.codSistema) - Number(b.codSistema));
   }
 
   const products = await readLocalProducts();
   return products.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => Number(a.codSistema) - Number(b.codSistema)
   );
 }
 

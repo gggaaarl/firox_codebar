@@ -44,15 +44,17 @@ export function ProductInventory({ products }: ProductInventoryProps) {
   const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
-    return products.filter(
-      (p) =>
-        matchesFilter(p.codSistema, filters.codSistema) &&
-        matchesFilter(p.codLocal, filters.codLocal) &&
-        matchesFilter(p.codigoBarra, filters.codigoBarra) &&
-        matchesFilter(p.clase, filters.clase) &&
-        matchesFilter(p.descripcion, filters.descripcion) &&
-        matchesFilter(p.marca, filters.marca)
-    );
+    return products
+      .filter(
+        (p) =>
+          matchesFilter(p.codSistema, filters.codSistema) &&
+          matchesFilter(p.codLocal, filters.codLocal) &&
+          matchesFilter(p.codigoBarra, filters.codigoBarra) &&
+          matchesFilter(p.clase, filters.clase) &&
+          matchesFilter(p.descripcion, filters.descripcion) &&
+          matchesFilter(p.marca, filters.marca)
+      )
+      .sort((a, b) => Number(a.codSistema) - Number(b.codSistema));
   }, [products, filters]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
