@@ -34,7 +34,7 @@ export function DashboardNav() {
             )}
           >
             <LayoutGrid className="size-4" />
-            Prendas
+            Productos
           </Link>
         </div>
 
@@ -47,7 +47,7 @@ export function DashboardNav() {
             )}
           >
             <Plus className="size-4" />
-            <span className="hidden sm:inline">Nueva prenda</span>
+            <span className="hidden sm:inline">Nuevo producto</span>
             <span className="sm:hidden">Nueva</span>
           </Link>
           <Button

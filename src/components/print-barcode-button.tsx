@@ -25,7 +25,7 @@ export function PrintBarcodeButton({ product }: PrintBarcodeButtonProps) {
 
     setDownloading(true);
     try {
-      await downloadBarcodeAsPng(svg, product.barcode);
+      await downloadBarcodeAsPng(svg, product.codigoBarra);
     } catch {
       toast.error("No se pudo descargar la imagen");
     } finally {
@@ -66,16 +66,23 @@ export function BarcodePrintArea({ product }: PrintBarcodeButtonProps) {
       className="overflow-x-auto rounded-2xl border border-stone-200 bg-white p-4 sm:p-6 print:border-0 print:p-0"
     >
       <div className="mb-4 hidden print:block">
-        <p className="text-lg font-semibold">{product.description}</p>
+        <p className="text-lg font-semibold">{product.descripcion}</p>
         <p className="text-sm text-stone-600">
-          {product.gender} · Talla {product.size} · {product.year}
+          {product.clase} · {product.marca} · {formatPrice(product.precioVenta)}
         </p>
       </div>
       <BarcodeDisplay
-        value={product.barcode}
+        value={product.codigoBarra}
         height={80}
         className="mx-auto block h-auto max-w-full"
       />
     </div>
   );
+}
+
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("es-PE", {
+    style: "currency",
+    currency: "PEN",
+  }).format(value);
 }

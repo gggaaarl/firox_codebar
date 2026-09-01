@@ -22,7 +22,7 @@ export function DeleteProductButton({
 
   async function handleDelete() {
     const confirmed = window.confirm(
-      `¿Eliminar "${product.description}"? Esta acción no se puede deshacer.`
+      `¿Eliminar "${product.descripcion}"? Esta acción no se puede deshacer.`
     );
 
     if (!confirmed) return;

@@ -5,14 +5,14 @@ export default function NewProductPage() {
     <div className="space-y-8">
       <div>
         <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
-          Nueva prenda
+          Nuevo producto
         </p>
         <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
-          Generar código de barras
+          Registrar producto
         </h1>
         <p className="mt-2 max-w-2xl text-stone-600">
-          Completa los datos de la prenda y sube una foto. El código se generará
-          automáticamente con el formato acordado.
+          Completa los datos del inventario. El código de barras viene del Excel
+          o se ingresa manualmente.
         </p>
       </div>
 

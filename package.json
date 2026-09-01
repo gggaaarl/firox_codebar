@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "setup:supabase": "node scripts/setup-supabase.mjs",
+    "verify:supabase": "node scripts/verify-supabase.mjs",
+    "db:migrate": "node scripts/apply-migration.mjs",
+    "import:products": "node scripts/import-products.mjs",
     "seed:admin": "node scripts/seed-admin.mjs"
   },
   "dependencies": {
@@ -39,7 +42,9 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
+    "pg": "^8.16.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "xlsx": "^0.18.5"
   }
 }

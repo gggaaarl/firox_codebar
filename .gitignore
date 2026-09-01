@@ -41,6 +41,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# supabase cli temp
+supabase/.temp/
+
+# excel lock files
+~$*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

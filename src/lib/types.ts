@@ -1,21 +1,28 @@
-export type Gender = "Hombre" | "Mujer" | "Unisex";
-
 export type Product = {
   id: string;
-  year: string;
-  description: string;
-  gender: Gender;
-  size: string;
-  barcode: string;
-  imageUrl: string | null;
+  codSistema: string;
+  codLocal: string;
+  codigoBarra: string;
+  clase: string;
+  descripcion: string;
+  marca: string;
+  color: string;
+  talla: string;
+  unidadMedida: string;
+  precioVenta: number;
   createdAt: string;
   updatedAt: string;
 };
 
 export type ProductInput = {
-  year: string;
-  description: string;
-  gender: Gender;
-  size: string;
-  imageUrl?: string | null;
+  codSistema: string;
+  codLocal: string;
+  codigoBarra: string;
+  clase: string;
+  descripcion: string;
+  marca: string;
+  color: string;
+  talla: string;
+  unidadMedida: string;
+  precioVenta: number;
 };

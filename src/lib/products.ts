@@ -1,7 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import { generateBarcodeValue } from "@/lib/barcode";
 import {
   getSupabaseAdmin,
   isSupabaseConfigured,
@@ -13,12 +12,16 @@ const DATA_FILE = path.join(DATA_DIR, "products.json");
 
 type DbRow = {
   id: string;
-  year: string;
-  description: string;
-  gender: Product["gender"];
-  size: string;
-  barcode: string;
-  image_url: string | null;
+  cod_sistema: string;
+  cod_local: string;
+  codigo_barra: string;
+  clase: string;
+  descripcion: string;
+  marca: string;
+  color: string;
+  talla: string;
+  unidad_medida: string;
+  precio_venta: number;
   created_at: string;
   updated_at: string;
 };
@@ -26,14 +29,33 @@ type DbRow = {
 function mapRow(row: DbRow): Product {
   return {
     id: row.id,
-    year: row.year,
-    description: row.description,
-    gender: row.gender,
-    size: row.size,
-    barcode: row.barcode,
-    imageUrl: row.image_url,
+    codSistema: row.cod_sistema,
+    codLocal: row.cod_local,
+    codigoBarra: row.codigo_barra,
+    clase: row.clase,
+    descripcion: row.descripcion,
+    marca: row.marca,
+    color: row.color,
+    talla: row.talla,
+    unidadMedida: row.unidad_medida,
+    precioVenta: Number(row.precio_venta),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+  };
+}
+
+function toDbRow(input: ProductInput) {
+  return {
+    cod_sistema: input.codSistema,
+    cod_local: input.codLocal,
+    codigo_barra: input.codigoBarra,
+    clase: input.clase,
+    descripcion: input.descripcion,
+    marca: input.marca,
+    color: input.color,
+    talla: input.talla,
+    unidad_medida: input.unidadMedida,
+    precio_venta: input.precioVenta,
   };
 }
 
@@ -55,15 +77,6 @@ async function readLocalProducts(): Promise<Product[]> {
 async function writeLocalProducts(products: Product[]): Promise<void> {
   await ensureDataFile();
   await fs.writeFile(DATA_FILE, JSON.stringify(products, null, 2), "utf-8");
-}
-
-function buildBarcode(input: ProductInput): string {
-  return generateBarcodeValue(
-    input.year,
-    input.description,
-    input.gender,
-    input.size
-  );
 }
 
 export async function getProducts(): Promise<Product[]> {
@@ -108,27 +121,19 @@ export async function getProduct(id: string): Promise<Product | null> {
 }
 
 export async function createProduct(input: ProductInput): Promise<Product> {
-  const barcode = buildBarcode(input);
   const now = new Date().toISOString();
 
   if (isSupabaseConfigured()) {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("products")
-      .insert({
-        year: input.year,
-        description: input.description,
-        gender: input.gender,
-        size: input.size,
-        barcode,
-        image_url: input.imageUrl ?? null,
-      })
+      .insert(toDbRow(input))
       .select("*")
       .single();
 
     if (error) {
       if (error.code === "23505") {
-        throw new Error("Ya existe una prenda con este código de barras.");
+        throw new Error("Ya existe un producto con este código de barras.");
       }
       throw new Error(error.message);
     }
@@ -137,19 +142,16 @@ export async function createProduct(input: ProductInput): Promise<Product> {
   }
 
   const products = await readLocalProducts();
-  const duplicate = products.find((product) => product.barcode === barcode);
+  const duplicate = products.find(
+    (product) => product.codigoBarra === input.codigoBarra
+  );
   if (duplicate) {
-    throw new Error("Ya existe una prenda con este código de barras.");
+    throw new Error("Ya existe un producto con este código de barras.");
   }
 
   const product: Product = {
     id: uuidv4(),
-    year: input.year,
-    description: input.description,
-    gender: input.gender,
-    size: input.size,
-    barcode,
-    imageUrl: input.imageUrl ?? null,
+    ...input,
     createdAt: now,
     updatedAt: now,
   };
@@ -163,19 +165,12 @@ export async function updateProduct(
   id: string,
   input: ProductInput
 ): Promise<Product> {
-  const barcode = buildBarcode(input);
-
   if (isSupabaseConfigured()) {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("products")
       .update({
-        year: input.year,
-        description: input.description,
-        gender: input.gender,
-        size: input.size,
-        barcode,
-        image_url: input.imageUrl ?? null,
+        ...toDbRow(input),
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
@@ -184,10 +179,10 @@ export async function updateProduct(
 
     if (error) {
       if (error.code === "PGRST116") {
-        throw new Error("Prenda no encontrada.");
+        throw new Error("Producto no encontrado.");
       }
       if (error.code === "23505") {
-        throw new Error("Ya existe otra prenda con este código de barras.");
+        throw new Error("Ya existe otro producto con este código de barras.");
       }
       throw new Error(error.message);
     }
@@ -199,21 +194,20 @@ export async function updateProduct(
   const index = products.findIndex((product) => product.id === id);
 
   if (index === -1) {
-    throw new Error("Prenda no encontrada.");
+    throw new Error("Producto no encontrado.");
   }
 
   const duplicate = products.find(
-    (product) => product.barcode === barcode && product.id !== id
+    (product) =>
+      product.codigoBarra === input.codigoBarra && product.id !== id
   );
   if (duplicate) {
-    throw new Error("Ya existe otra prenda con este código de barras.");
+    throw new Error("Ya existe otro producto con este código de barras.");
   }
 
   const updated: Product = {
     ...products[index],
     ...input,
-    barcode,
-    imageUrl: input.imageUrl ?? null,
     updatedAt: new Date().toISOString(),
   };
 
@@ -231,7 +225,7 @@ export async function deleteProduct(id: string): Promise<void> {
       .eq("id", id);
 
     if (error) throw new Error(error.message);
-    if (!count) throw new Error("Prenda no encontrada.");
+    if (!count) throw new Error("Producto no encontrado.");
     return;
   }
 
@@ -239,7 +233,7 @@ export async function deleteProduct(id: string): Promise<void> {
   const filtered = products.filter((product) => product.id !== id);
 
   if (filtered.length === products.length) {
-    throw new Error("Prenda no encontrada.");
+    throw new Error("Producto no encontrado.");
   }
 
   await writeLocalProducts(filtered);

@@ -6,22 +6,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageUpload } from "@/components/image-upload";
 import { BarcodeDisplay } from "@/components/barcode-display";
-import { generateBarcodeValue } from "@/lib/barcode";
-import type { Gender, Product } from "@/lib/types";
-import { Loader2, Sparkles } from "lucide-react";
-
-const GENDERS: Gender[] = ["Hombre", "Mujer", "Unisex"];
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "Única"];
+import type { Product } from "@/lib/types";
+import { Loader2 } from "lucide-react";
 
 type ProductFormProps = {
   product?: Product;
@@ -30,21 +18,24 @@ type ProductFormProps = {
 
 export function ProductForm({ product, mode }: ProductFormProps) {
   const router = useRouter();
-  const currentYear = new Date().getFullYear().toString();
 
-  const [year, setYear] = useState(product?.year ?? currentYear);
-  const [description, setDescription] = useState(product?.description ?? "");
-  const [gender, setGender] = useState<Gender>(product?.gender ?? "Mujer");
-  const [size, setSize] = useState(product?.size ?? "M");
-  const [imageUrl, setImageUrl] = useState<string | null>(
-    product?.imageUrl ?? null
+  const [codSistema, setCodSistema] = useState(product?.codSistema ?? "");
+  const [codLocal, setCodLocal] = useState(product?.codLocal ?? "");
+  const [codigoBarra, setCodigoBarra] = useState(product?.codigoBarra ?? "");
+  const [clase, setClase] = useState(product?.clase ?? "");
+  const [descripcion, setDescripcion] = useState(product?.descripcion ?? "");
+  const [marca, setMarca] = useState(product?.marca ?? "");
+  const [color, setColor] = useState(product?.color ?? "");
+  const [talla, setTalla] = useState(product?.talla ?? "");
+  const [unidadMedida, setUnidadMedida] = useState(
+    product?.unidadMedida ?? "UND"
+  );
+  const [precioVenta, setPrecioVenta] = useState(
+    product?.precioVenta?.toString() ?? "0"
   );
   const [loading, setLoading] = useState(false);
 
-  const previewBarcode = useMemo(() => {
-    if (!description.trim()) return "";
-    return generateBarcodeValue(year, description, gender, size);
-  }, [year, description, gender, size]);
+  const previewBarcode = useMemo(() => codigoBarra.trim(), [codigoBarra]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -52,11 +43,16 @@ export function ProductForm({ product, mode }: ProductFormProps) {
 
     try {
       const payload = {
-        year,
-        description,
-        gender,
-        size,
-        imageUrl,
+        codSistema,
+        codLocal,
+        codigoBarra,
+        clase,
+        descripcion,
+        marca,
+        color,
+        talla,
+        unidadMedida,
+        precioVenta: Number(precioVenta) || 0,
       };
 
       const response = await fetch(
@@ -71,13 +67,13 @@ export function ProductForm({ product, mode }: ProductFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error ?? "Error al guardar la prenda");
+        throw new Error(data.error ?? "Error al guardar el producto");
       }
 
       toast.success(
         mode === "create"
-          ? "Prenda creada correctamente"
-          : "Prenda actualizada correctamente"
+          ? "Producto creado correctamente"
+          : "Producto actualizado correctamente"
       );
       router.push(`/panel/${data.id}`);
       router.refresh();
@@ -85,7 +81,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
       toast.error(
         submitError instanceof Error
           ? submitError.message
-          : "Error al guardar la prenda"
+          : "Error al guardar el producto"
       );
     } finally {
       setLoading(false);
@@ -94,113 +90,135 @@ export function ProductForm({ product, mode }: ProductFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-2">
-      <div className="space-y-6">
-        <Card className="border-0 shadow-sm ring-1 ring-black/5">
-          <CardHeader>
-            <CardTitle className="font-heading text-xl">
-              Foto de la prenda
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ImageUpload value={imageUrl} onChange={setImageUrl} />
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 bg-stone-900 text-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-heading text-xl">
-              <Sparkles className="size-5 text-rose-400" />
-              Vista previa del código
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-stone-300">
-              Formato: año-descripción-sexo-talla
-            </p>
-            {previewBarcode ? (
-              <div className="overflow-x-auto rounded-xl bg-white p-4">
-                <BarcodeDisplay
-                  value={previewBarcode}
-                  className="mx-auto block h-auto max-w-full"
-                />
-              </div>
-            ) : (
-              <p className="rounded-xl border border-dashed border-stone-600 p-6 text-center text-sm text-stone-400">
-                Completa los datos para ver el código de barras
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="border-0 shadow-sm ring-1 ring-black/5">
+      <Card className="border-0 bg-stone-900 text-white shadow-sm lg:order-2">
         <CardHeader>
           <CardTitle className="font-heading text-xl">
-            Datos de la prenda
+            Vista previa del código
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {previewBarcode ? (
+            <div className="overflow-x-auto rounded-xl bg-white p-4">
+              <BarcodeDisplay
+                value={previewBarcode}
+                className="mx-auto block h-auto max-w-full"
+              />
+            </div>
+          ) : (
+            <p className="rounded-xl border border-dashed border-stone-600 p-6 text-center text-sm text-stone-400">
+              Ingresa el código de barras para ver la vista previa
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-0 shadow-sm ring-1 ring-black/5 lg:order-1">
+        <CardHeader>
+          <CardTitle className="font-heading text-xl">
+            Datos del producto
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="codSistema">Cod. sistema</Label>
+              <Input
+                id="codSistema"
+                value={codSistema}
+                onChange={(e) => setCodSistema(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="codLocal">Cod. local</Label>
+              <Input
+                id="codLocal"
+                value={codLocal}
+                onChange={(e) => setCodLocal(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="year">Año</Label>
+            <Label htmlFor="codigoBarra">Código de barras</Label>
             <Input
-              id="year"
-              value={year}
-              onChange={(event) => setYear(event.target.value)}
-              placeholder="2026"
+              id="codigoBarra"
+              value={codigoBarra}
+              onChange={(e) => setCodigoBarra(e.target.value)}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción</Label>
+            <Label htmlFor="clase">Clase</Label>
             <Input
-              id="description"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Ej: Polera básica algodón"
+              id="clase"
+              value={clase}
+              onChange={(e) => setClase(e.target.value)}
+              placeholder="Ej: CASACA, BOTAS"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="descripcion">Descripción</Label>
+            <Input
+              id="descripcion"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
               required
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Sexo</Label>
-              <Select
-                value={gender}
-                onValueChange={(value) =>
-                  value && setGender(value as Gender)
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {GENDERS.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="marca">Marca</Label>
+              <Input
+                id="marca"
+                value={marca}
+                onChange={(e) => setMarca(e.target.value)}
+              />
             </div>
-
             <div className="space-y-2">
-              <Label>Talla</Label>
-              <Select
-                value={size}
-                onValueChange={(value) => value && setSize(value)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SIZES.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="color">Color</Label>
+              <Input
+                id="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="talla">Talla</Label>
+              <Input
+                id="talla"
+                value={talla}
+                onChange={(e) => setTalla(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="unidadMedida">Unidad</Label>
+              <Input
+                id="unidadMedida"
+                value={unidadMedida}
+                onChange={(e) => setUnidadMedida(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="precioVenta">Precio venta</Label>
+              <Input
+                id="precioVenta"
+                type="number"
+                min="0"
+                step="0.01"
+                value={precioVenta}
+                onChange={(e) => setPrecioVenta(e.target.value)}
+                required
+              />
             </div>
           </div>
 
@@ -215,11 +233,11 @@ export function ProductForm({ product, mode }: ProductFormProps) {
             </Button>
             <Button
               type="submit"
-              disabled={loading || !description.trim()}
+              disabled={loading || !codigoBarra.trim() || !descripcion.trim()}
               className="w-full bg-rose-500 hover:bg-rose-600 sm:flex-1"
             >
               {loading && <Loader2 className="size-4 animate-spin" />}
-              {mode === "create" ? "Generar código" : "Guardar cambios"}
+              {mode === "create" ? "Guardar producto" : "Guardar cambios"}
             </Button>
           </div>
         </CardContent>

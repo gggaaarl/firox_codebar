@@ -21,11 +21,10 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           Editar prenda
         </p>
         <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
-          {product.description}
+          {product.descripcion}
         </h1>
         <p className="mt-2 text-stone-600">
-          Actualiza los datos o la imagen. El código de barras se recalculará si
-          cambias año, descripción, sexo o talla.
+          Actualiza los datos del producto en inventario.
         </p>
       </div>
 

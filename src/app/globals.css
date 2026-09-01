@@ -100,15 +100,20 @@
     visibility: hidden;
   }
 
+  #label-print,
+  #label-print *,
   #barcode-print,
   #barcode-print * {
     visibility: visible;
   }
 
+  #label-print,
   #barcode-print {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    box-shadow: none !important;
+    ring: none !important;
   }
 }

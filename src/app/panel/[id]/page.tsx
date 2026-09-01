@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/products";
@@ -16,6 +15,13 @@ import { ArrowLeft, Pencil } from "lucide-react";
 type ProductDetailPageProps = {
   params: Promise<{ id: string }>;
 };
+
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("es-PE", {
+    style: "currency",
+    currency: "PEN",
+  }).format(value);
+}
 
 export default async function ProductDetailPage({
   params,
@@ -43,14 +49,20 @@ export default async function ProductDetailPage({
           </Link>
           <div>
             <p className="text-sm font-medium uppercase tracking-widest text-rose-500">
-              {product.year}
+              {product.clase}
             </p>
             <h1 className="font-heading text-3xl font-semibold text-stone-900 sm:text-4xl">
-              {product.description}
+              {product.descripcion}
             </h1>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Badge className="bg-stone-900">{product.gender}</Badge>
-              <Badge variant="secondary">Talla {product.size}</Badge>
+              {product.marca && (
+                <Badge className="bg-stone-900">{product.marca}</Badge>
+              )}
+              {product.color && <Badge variant="secondary">{product.color}</Badge>}
+              {product.talla && (
+                <Badge variant="secondary">Talla {product.talla}</Badge>
+              )}
+              <Badge variant="secondary">{formatPrice(product.precioVenta)}</Badge>
             </div>
           </div>
         </div>
@@ -68,22 +80,23 @@ export default async function ProductDetailPage({
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card className="overflow-hidden border-0 shadow-sm ring-1 ring-black/5">
-          <div className="relative aspect-[4/5] bg-stone-100">
-            {product.imageUrl ? (
-              <Image
-                src={product.imageUrl}
-                alt={product.description}
-                fill
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-stone-400">
-                Sin imagen cargada
+        <Card className="border-0 shadow-sm ring-1 ring-black/5">
+          <CardContent className="space-y-4 p-6">
+            <dl className="grid gap-3 text-sm">
+              <div className="flex justify-between gap-4">
+                <dt className="text-stone-500">Cod. sistema</dt>
+                <dd className="font-medium">{product.codSistema}</dd>
               </div>
-            )}
-          </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-stone-500">Cod. local</dt>
+                <dd className="font-medium">{product.codLocal}</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-stone-500">Unidad</dt>
+                <dd className="font-medium">{product.unidadMedida}</dd>
+              </div>
+            </dl>
+          </CardContent>
         </Card>
 
         <div className="space-y-6">
@@ -94,22 +107,11 @@ export default async function ProductDetailPage({
                   Código de barras
                 </p>
                 <p className="break-all font-mono text-base font-semibold text-stone-900 sm:text-lg">
-                  {product.barcode}
+                  {product.codigoBarra}
                 </p>
               </div>
               <BarcodePrintArea product={product} />
               <PrintBarcodeButton product={product} />
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 bg-stone-900 text-white shadow-sm">
-            <CardContent className="space-y-2 p-6">
-              <p className="text-sm text-stone-300">Para tu sistema de facturación</p>
-              <p className="text-sm leading-relaxed text-stone-200">
-                Registra manualmente este mismo código en tu sistema de
-                facturación electrónica. Ambos sistemas operan de forma
-                independiente pero comparten el mismo identificador de prenda.
-              </p>
             </CardContent>
           </Card>
         </div>
